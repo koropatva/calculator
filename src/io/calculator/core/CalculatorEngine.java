@@ -1,0 +1,79 @@
+package io.calculator.core;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import io.calculator.core.exception.CalculationException;
+import io.calculator.core.operation.Add;
+import io.calculator.core.operation.Divide;
+import io.calculator.core.operation.Multiply;
+import io.calculator.core.operation.Subtract;
+import io.calculator.core.operation.interfaces.Operation;
+import io.calculator.core.validation.Rule;
+import io.calculator.core.validation.ValidationService;
+import io.calculator.core.validation.rules.BigDecimalRule;
+
+public class CalculatorEngine {
+
+    private static final String EXPRESSION_SPLITTER = " ";
+    private List<Operation> operations;
+    private Deque<BigDecimal> data;
+    private Rule bigDecimalRule;
+
+    private ValidationService validationService;
+
+    public CalculatorEngine() {
+        this.data = new LinkedList<>();
+
+        this.operations = new ArrayList<>();
+        this.operations.add(new Add());
+        this.operations.add(new Divide());
+        this.operations.add(new Multiply());
+        this.operations.add(new Subtract());
+
+        this.validationService = new ValidationService();
+        this.bigDecimalRule = new BigDecimalRule();
+    }
+
+    public String calculate(String expression) {
+        String[] args = split(expression);
+
+        validateArgs(args);
+
+        Arrays.stream(args).forEach(arg -> {
+            if (bigDecimalRule.invalid(arg)) {
+                operations.stream().filter(o -> arg.matches(o.getRegExp())).findFirst().ifPresent(o -> {
+                    try {
+                        BigDecimal secondArg = data.pop();
+                        BigDecimal firstArg = data.pop();
+                        BigDecimal result = o.calculate(firstArg, secondArg);
+                        data.push(result);
+                    } catch (NoSuchElementException e) {
+                        throw new CalculationException();
+                    }
+                });
+            } else {
+                data.push(new BigDecimal(arg));
+            }
+        });
+
+        BigDecimal result = data.pop();
+        data.push(result);
+
+        return result.toString();
+    }
+
+    private void validateArgs(String[] args) {
+        Arrays.stream(args).forEach(validationService::validate);
+    }
+
+    private String[] split(String expression) {
+        return expression.trim().split(EXPRESSION_SPLITTER);
+    }
+
+}
