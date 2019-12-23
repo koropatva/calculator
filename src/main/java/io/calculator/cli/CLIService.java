@@ -1,18 +1,24 @@
 package io.calculator.cli;
 
-import java.io.Console;
+import java.util.Scanner;
+
+import io.calculator.core.CalculatorEngine;
 
 public class CLIService {
 
-    private Console console;
+    private Scanner scanner;
+    private CalculatorEngine calculatorEngine;
 
     public CLIService() {
-        console = System.console();
+        this.scanner = new Scanner(System.in);
+        this.calculatorEngine = new CalculatorEngine();
     }
 
     public void startProcess() {
         do {
-            System.out.println(console.readLine());
+            String arg = scanner.nextLine();
+            System.out.println("> " + arg);
+            System.out.println(calculatorEngine.calculate(arg));
         } while (true);
     }
 }
