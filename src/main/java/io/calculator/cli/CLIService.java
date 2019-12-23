@@ -18,6 +18,7 @@ public class CLIService {
     }
 
     public void startProcess() {
+        System.out.println("Calculator is UP. You can start to make your calculations.");
         boolean infiniteLoop = true;
         do {
             try {
@@ -32,5 +33,6 @@ public class CLIService {
                 System.out.println(e.getMessage());
             }
         } while (infiniteLoop);
+        System.out.println("Calculator is DOWN.");
     }
 }

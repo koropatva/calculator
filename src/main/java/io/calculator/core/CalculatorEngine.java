@@ -19,6 +19,7 @@ import io.calculator.core.validation.rules.BigDecimalRule;
 
 public class CalculatorEngine {
 
+    private static final String CLEAR_STACK_OPERATION = "C";
     private static final String EXPRESSION_SPLITTER = " ";
 
     private List<Operation> operations;
@@ -43,8 +44,19 @@ public class CalculatorEngine {
     public String calculate(String expression) {
         String[] args = split(expression);
 
+        if (args.length == 1 && CLEAR_STACK_OPERATION.equals(args[0])) {
+            data.clear();
+            return "Clear calculation memory.";
+        }
+
         validateArgs(args);
 
+        makeOperationOnArgs(args);
+
+        return fetchResult().toString();
+    }
+
+    private void makeOperationOnArgs(String[] args) {
         Arrays.stream(args).forEach(arg -> {
             if (bigDecimalRule.invalid(arg)) {
                 operations.stream().filter(o -> arg.matches(o.getRegExp())).findFirst().ifPresent(o -> {
@@ -61,11 +73,12 @@ public class CalculatorEngine {
                 data.push(new BigDecimal(arg));
             }
         });
+    }
 
+    private BigDecimal fetchResult() {
         BigDecimal result = data.pop();
         data.push(result);
-
-        return result.toString();
+        return result;
     }
 
     private void validateArgs(String[] args) {
