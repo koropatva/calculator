@@ -5,6 +5,6 @@ public class CalculationException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public CalculationException() {
-        super("Stack is empty and can't calculate the operation");
+        super("Not enough data to calculate the operation");
     }
 }

@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import io.calculator.core.exception.CalculationException;
 import io.calculator.core.operation.Add;
@@ -21,10 +20,11 @@ import io.calculator.core.validation.rules.BigDecimalRule;
 public class CalculatorEngine {
 
     private static final String EXPRESSION_SPLITTER = " ";
+
     private List<Operation> operations;
     private Deque<BigDecimal> data;
-    private Rule bigDecimalRule;
 
+    private Rule bigDecimalRule;
     private ValidationService validationService;
 
     public CalculatorEngine() {
@@ -48,14 +48,14 @@ public class CalculatorEngine {
         Arrays.stream(args).forEach(arg -> {
             if (bigDecimalRule.invalid(arg)) {
                 operations.stream().filter(o -> arg.matches(o.getRegExp())).findFirst().ifPresent(o -> {
-                    try {
-                        BigDecimal secondArg = data.pop();
-                        BigDecimal firstArg = data.pop();
-                        BigDecimal result = o.calculate(firstArg, secondArg);
-                        data.push(result);
-                    } catch (NoSuchElementException e) {
+                    if (data.size() < 2) {
                         throw new CalculationException();
                     }
+
+                    BigDecimal secondArg = data.pop();
+                    BigDecimal firstArg = data.pop();
+
+                    data.push(o.calculate(firstArg, secondArg));
                 });
             } else {
                 data.push(new BigDecimal(arg));
