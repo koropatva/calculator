@@ -2,7 +2,7 @@ package io.calculator;
 
 import io.calculator.core.CalculatorEngine;
 
-public class CalculatorMain {
+public class App {
 
     private static CalculatorEngine calculatorEngine = new CalculatorEngine();
 
