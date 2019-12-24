@@ -4,7 +4,7 @@ public class CalculationException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public CalculationException() {
-        super("Not enough data to calculate the operation");
+    public CalculationException(String e) {
+        super(e);
     }
 }

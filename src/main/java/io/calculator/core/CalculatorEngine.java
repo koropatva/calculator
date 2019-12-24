@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.calculator.core.exception.CalculationException;
 import io.calculator.core.operation.Add;
@@ -19,7 +20,9 @@ import io.calculator.core.validation.rules.BigDecimalRule;
 
 public class CalculatorEngine {
 
+    static final String CLEAR_CALCULATION_MEMORY = "Clear calculation memory.";
     private static final String CLEAR_STACK_OPERATION = "C";
+    private static final String PRINT_STACK_OPERATION = "P";
     private static final String EXPRESSION_SPLITTER = " ";
 
     private List<Operation> operations;
@@ -46,7 +49,11 @@ public class CalculatorEngine {
 
         if (args.length == 1 && CLEAR_STACK_OPERATION.equals(args[0])) {
             data.clear();
-            return "Clear calculation memory.";
+            return CLEAR_CALCULATION_MEMORY;
+        }
+
+        if (args.length == 1 && PRINT_STACK_OPERATION.equals(args[0])) {
+            return Arrays.stream(data.toArray()).map(Object::toString).collect(Collectors.joining(" "));
         }
 
         validateArgs(args);
@@ -61,13 +68,17 @@ public class CalculatorEngine {
             if (bigDecimalRule.invalid(arg)) {
                 operations.stream().filter(o -> arg.matches(o.getRegExp())).findFirst().ifPresent(o -> {
                     if (data.size() < 2) {
-                        throw new CalculationException();
+                        throw new CalculationException("Not enough data to calculate the operation");
                     }
 
                     BigDecimal secondArg = data.pop();
                     BigDecimal firstArg = data.pop();
 
-                    data.push(o.calculate(firstArg, secondArg));
+                    try {
+                        data.push(o.calculate(firstArg, secondArg));
+                    } catch (ArithmeticException e) {
+                        throw new CalculationException(e.getMessage());
+                    }
                 });
             } else {
                 data.push(new BigDecimal(arg));

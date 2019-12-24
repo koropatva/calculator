@@ -23,11 +23,20 @@ repositories {
 dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+	testCompile 'org.mockito:mockito-all:1.10.19'
+	testCompile 'org.assertj:assertj-core:3.14.0'
+    
 }
 
 application {
     // Define the main class for the application
     mainClassName = 'io.calculator.App'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'io.calculator.App'
+    }
 }
 
 run{
