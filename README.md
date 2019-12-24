@@ -1,10 +1,6 @@
 # Calculator
 Calculator is an application to calculate math operation over numbers. To interact with calculator we are using a command-line interface.
 
-**Table of Contents**
-
-[TOC]
-
 ## Available operations:
 - Add(**+**);
 - Subtract(**-**);
@@ -91,40 +87,3 @@ Notes: if send wrong arg or operations, `CalculatorEngine` can throw exceptions:
 3. Add more unit tests
 4. Improve processing clear and print memory
 5. Think about some flexible exception process
-
-### Flow
-```flow
-st=>start: CLI input
-ce=>operation: Calculation Engine
-split=>operation: Split input args
-clear=>operation: Clear memory
-print=>operation: Print memory
-result=>operation: Print result
-validateArg=>operation: Validate args
-validateOperation=>operation: Validate operation
-makeOperation=>operation: Make operatiion
-exitCond=>condition: Exit ('Q')?
-clearCond=>condition: Clear memory('C')?
-printCond=>condition: Print memory('P')?
-validCond=>condition: Valid args?
-operationValidCond=>condition: Valid operation?
-e=>end: Stop application
-
-st->exitCond
-ce->split->clearCond
-validateArg->validCond
-validateOperation->operationValidCond
-clear->result
-print->result
-makeOperation->result
-exitCond(yes)->e
-exitCond(no)->ce
-clearCond(no)->printCond
-clearCond(yes)->clear
-printCond(no)->validateArg
-printCond(yes)->print
-validCond(yes)->validateOperation
-validCond(no)->result
-operationValidCond(yes)->makeOperation
-operationValidCond(no)->result
-```
