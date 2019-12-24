@@ -11,34 +11,42 @@ Calculator is an application to calculate math operation over numbers. To intera
 
 ## Examples of calculations
 ##### Example 1:
-> IN: 5
-IN: 8
-IN: +
-OUT: 13
+    > 5
+    5
+    > 8
+    8
+    > +
+    13
 
 ##### Example 2:
-> IN: 5 8 +
-OUT: 13
-IN: 13 -
-OUT: 0.0
+    > 5 8 +
+    13
+    > 13 -
+    0.0
 
 ##### Example 3:
-> IN: -3
-IN: -2
-IN: *
-OUT: 6.0
-IN: 5
-IN:  +
-OUT: 11.0
+    > -3
+    -3
+    > -2
+    -2
+    > *
+    6.0
+    > 5
+    6
+    > +
+    11.0
 
 ##### Example 4:
-> IN: 5
-IN: 9
-IN: 1
-IN: -
-OUT: 8
-IN: /
-OUT: 0.625
+    > 5
+    5
+    > 9
+    9
+    > 1
+    1
+    > -
+    8
+    > /
+    0.625
 
 ## Architecture
 ### Architecture design
